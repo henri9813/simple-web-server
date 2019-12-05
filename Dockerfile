@@ -1,8 +1,24 @@
-FROM php:7.4-apache
+FROM php:7.3-apache
 
 ADD vhost.conf /etc/apache2/sites-available/000-default.conf
 
 WORKDIR /app
 
-RUN docker-php-ext-enable mysqli
+RUN apt update \
+    && apt install --yes git libxml2-dev zlib1g-dev libzip-dev libgmp-dev libcurl4-gnutls-dev \
+    && apt clean \
+    && rm -rf /var/lib/apt
+
+RUN docker-php-ext-install \
+    bcmath \
+    curl \
+    gmp \
+    hash \
+    intl \
+    json \
+    mysqli \
+    pdo_mysql \
+    xmlrpc \
+    zip
+
 RUN a2enmod rewrite
